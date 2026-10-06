@@ -662,7 +662,10 @@
       else if (resumeMusic && wantMusic) { resumeMusic = false; playMusic(); }
     });
     /* fetch the song quietly once the film has loaded, so it is ready when the guest taps */
-    var warm = function () { if (bgm.preload !== 'auto') { bgm.preload = 'auto'; try { bgm.load(); } catch (e) {} } };
+    var warm = function () {
+      if (wantMusic || !bgm.paused) return;   /* never touch the song once the guest has tapped: reloading it would stop it on phones */
+      if (bgm.preload !== 'auto') { bgm.preload = 'auto'; try { bgm.load(); } catch (e) {} }
+    };
     if (vid) { vid.addEventListener('canplaythrough', warm, { once: true }); setTimeout(warm, 8000); }
   }
 
